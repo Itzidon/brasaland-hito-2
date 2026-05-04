@@ -1,17 +1,25 @@
-export function filterByCountry<T extends { country: string }>(
+import { Country } from "../types/models";
+
+// Filtrar por país
+export function filterByCountry<T extends { country: Country }>(
   items: T[],
-  country: string
+  country: Country
 ): T[] {
   return items.filter(item => item.country === country);
 }
 
-export function sortByName<T extends { fullName: string }>(
+// Ordenar por nombre (fullName o name)
+export function sortByStringField<T>(
   items: T[],
+  field: keyof T,
   ascending: boolean = true
 ): T[] {
   return [...items].sort((a, b) => {
-    if (a.fullName < b.fullName) return ascending ? -1 : 1;
-    if (a.fullName > b.fullName) return ascending ? 1 : -1;
+    const aValue = String(a[field]);
+    const bValue = String(b[field]);
+
+    if (aValue < bValue) return ascending ? -1 : 1;
+    if (aValue > bValue) return ascending ? 1 : -1;
     return 0;
   });
 }
