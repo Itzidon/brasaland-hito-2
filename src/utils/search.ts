@@ -1,6 +1,6 @@
 export function binarySearch<T>(
   items: T[],
-  target: number,
+ target: number,
   getValue: (item: T) => number
 ): number {
   let left = 0;
