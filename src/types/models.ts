@@ -24,6 +24,8 @@ export interface Order {
   id: number;
   restaurantId: number;
   total: number;
+  
   currency: Currency;
   date: string;
 }
+// update
