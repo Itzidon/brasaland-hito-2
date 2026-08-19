@@ -35,6 +35,7 @@ export default function EditCandidatePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [feedback, setFeedback] = useState("");
 
   useEffect(() => {
     async function loadCandidate() {
@@ -75,6 +76,9 @@ export default function EditCandidatePage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    setError("");
+    setFeedback("");
+
     if (
       !form.full_name.trim() ||
       !form.email.trim() ||
@@ -86,20 +90,27 @@ export default function EditCandidatePage() {
     }
 
     setSaving(true);
-    setError("");
 
     try {
       await updateCandidate(params.id, form);
-      router.push(`/candidates/${params.id}`);
+
+      setFeedback("Candidatura actualizada correctamente.");
+
+      setTimeout(() => {
+        router.push(`/candidates/${params.id}`);
+      }, 1000);
     } catch {
       setError("No se pudo actualizar la candidatura.");
-    } finally {
       setSaving(false);
     }
   }
 
   if (loading) {
-    return <p>Cargando candidatura...</p>;
+    return (
+      <main>
+        <p>Cargando candidatura...</p>
+      </main>
+    );
   }
 
   return (
@@ -109,7 +120,7 @@ export default function EditCandidatePage() {
       </Link>
 
       <h1>Editar candidatura</h1>
-      <p>Brasaland Digital · People & Culture</p>
+      <p>Brasaland Digital · Personas y Cultura</p>
 
       <form onSubmit={handleSubmit}>
         <div>
@@ -119,8 +130,8 @@ export default function EditCandidatePage() {
             <input
               type="text"
               value={form.full_name}
-              onChange={(e) =>
-                updateField("full_name", e.target.value)
+              onChange={(event) =>
+                updateField("full_name", event.target.value)
               }
               required
             />
@@ -134,8 +145,8 @@ export default function EditCandidatePage() {
             <input
               type="email"
               value={form.email}
-              onChange={(e) =>
-                updateField("email", e.target.value)
+              onChange={(event) =>
+                updateField("email", event.target.value)
               }
               required
             />
@@ -149,8 +160,8 @@ export default function EditCandidatePage() {
             <input
               type="text"
               value={form.phone}
-              onChange={(e) =>
-                updateField("phone", e.target.value)
+              onChange={(event) =>
+                updateField("phone", event.target.value)
               }
               required
             />
@@ -164,8 +175,8 @@ export default function EditCandidatePage() {
             <input
               type="text"
               value={form.position}
-              onChange={(e) =>
-                updateField("position", e.target.value)
+              onChange={(event) =>
+                updateField("position", event.target.value)
               }
               required
             />
@@ -179,8 +190,8 @@ export default function EditCandidatePage() {
             <input
               type="url"
               value={form.linkedin_url}
-              onChange={(e) =>
-                updateField("linkedin_url", e.target.value)
+              onChange={(event) =>
+                updateField("linkedin_url", event.target.value)
               }
             />
           </label>
@@ -193,8 +204,8 @@ export default function EditCandidatePage() {
             <input
               type="url"
               value={form.cv_url}
-              onChange={(e) =>
-                updateField("cv_url", e.target.value)
+              onChange={(event) =>
+                updateField("cv_url", event.target.value)
               }
             />
           </label>
@@ -208,10 +219,10 @@ export default function EditCandidatePage() {
               type="number"
               min="0"
               value={form.experience_years}
-              onChange={(e) =>
+              onChange={(event) =>
                 updateField(
                   "experience_years",
-                  Number(e.target.value)
+                  Number(event.target.value)
                 )
               }
             />
@@ -224,10 +235,10 @@ export default function EditCandidatePage() {
             <br />
             <select
               value={form.status}
-              onChange={(e) =>
+              onChange={(event) =>
                 updateField(
                   "status",
-                  e.target.value as CandidateStatus
+                  event.target.value as CandidateStatus
                 )
               }
             >
@@ -245,23 +256,29 @@ export default function EditCandidatePage() {
             <br />
             <select
               value={form.stage}
-              onChange={(e) =>
+              onChange={(event) =>
                 updateField(
                   "stage",
-                  e.target.value as CandidateStage
+                  event.target.value as CandidateStage
                 )
               }
             >
               <option value="pending">
                 Pendiente de revisión
               </option>
-              <option value="review">En revisión</option>
+
+              <option value="review">
+                En revisión
+              </option>
+
               <option value="personal_interview">
                 Entrevista personal
               </option>
+
               <option value="technical_interview">
                 Entrevista técnica
               </option>
+
               <option value="offer_presented">
                 Oferta presentada
               </option>
@@ -270,6 +287,12 @@ export default function EditCandidatePage() {
         </div>
 
         {error && <p>{error}</p>}
+
+        {feedback && (
+          <p>
+            <strong>{feedback}</strong>
+          </p>
+        )}
 
         <button type="submit" disabled={saving}>
           {saving ? "Guardando..." : "Guardar cambios"}

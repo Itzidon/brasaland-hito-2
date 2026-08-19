@@ -30,6 +30,7 @@ export default function NewCandidatePage() {
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [feedback, setFeedback] = useState("");
 
   function updateField(
     field: keyof CandidateFormData,
@@ -44,6 +45,9 @@ export default function NewCandidatePage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    setError("");
+    setFeedback("");
+
     if (
       !form.full_name.trim() ||
       !form.email.trim() ||
@@ -55,14 +59,17 @@ export default function NewCandidatePage() {
     }
 
     setSaving(true);
-    setError("");
 
     try {
       await createCandidate(form);
-      router.push("/");
+
+      setFeedback("Candidatura registrada correctamente.");
+
+      setTimeout(() => {
+        router.push("/");
+      }, 2000);
     } catch {
       setError("No se pudo registrar la candidatura.");
-    } finally {
       setSaving(false);
     }
   }
@@ -72,7 +79,7 @@ export default function NewCandidatePage() {
       <Link href="/">← Volver a candidaturas</Link>
 
       <h1>Nueva candidatura</h1>
-      <p>Brasaland Digital · People & Culture</p>
+      <p>Brasaland Digital · Personas y Cultura</p>
 
       <form onSubmit={handleSubmit}>
         <div>
@@ -231,6 +238,12 @@ export default function NewCandidatePage() {
         </div>
 
         {error && <p>{error}</p>}
+
+        {feedback && (
+          <p>
+            <strong>{feedback}</strong>
+          </p>
+        )}
 
         <button type="submit" disabled={saving}>
           {saving ? "Guardando..." : "Registrar candidatura"}
