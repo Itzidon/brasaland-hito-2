@@ -1,8 +1,45 @@
+type InfoCardProps = {
+  number: string;
+  title: string;
+  text: string;
+  id?: string;
+};
+
+function InfoCard({ number, title, text, id }: InfoCardProps) {
+  return (
+    <article className="card" id={id}>
+      <span>{number}</span>
+      <h3>{title}</h3>
+      <p>{text}</p>
+    </article>
+  );
+}
+
 export default function Home() {
+  const cards = [
+    {
+      number: "01",
+      title: "Colombia",
+      text: "Parte central de la operación de Brasaland y sede de nuestros equipos corporativos.",
+    },
+    {
+      number: "02",
+      title: "Florida",
+      text: "Presencia internacional que conecta la marca con clientes fuera de Colombia.",
+    },
+    {
+      number: "03",
+      title: "Brasaland Digital",
+      text: "Nuestra unidad tecnológica interna crea herramientas para mejorar los procesos de los equipos de Brasaland.",
+      id: "digital",
+    },
+  ];
+
   return (
     <main>
       <header className="header">
         <div className="logo">BRASALAND</div>
+
         <nav>
           <a href="#empresa">Empresa</a>
           <a href="#presencia">Presencia</a>
@@ -13,11 +50,14 @@ export default function Home() {
       <section className="hero">
         <div className="heroContent">
           <span className="tag">COLOMBIA · FLORIDA</span>
+
           <h1>Brasaland</h1>
+
           <p className="heroText">
             Una cadena de restaurantes de parrilla con 14 locales,
             conectando nuestra operación en Colombia y Florida.
           </p>
+
           <a className="button" href="#empresa">
             Conocer Brasaland
           </a>
@@ -26,14 +66,18 @@ export default function Home() {
         <div className="heroCard">
           <span className="number">14</span>
           <span className="cardText">locales</span>
+
           <div className="line" />
+
           <span>Colombia + Florida</span>
         </div>
       </section>
 
       <section id="empresa" className="section">
         <p className="eyebrow">NUESTRA EMPRESA</p>
+
         <h2>Una operación que sigue creciendo</h2>
+
         <p>
           Brasaland es una cadena de restaurantes de parrilla con presencia
           en Colombia y Florida. Nuestra organización combina la operación
@@ -43,32 +87,15 @@ export default function Home() {
       </section>
 
       <section id="presencia" className="cards">
-        <article className="card">
-          <span>01</span>
-          <h3>Colombia</h3>
-          <p>
-            Parte central de la operación de Brasaland y sede de nuestros
-            equipos corporativos.
-          </p>
-        </article>
-
-        <article className="card">
-          <span>02</span>
-          <h3>Florida</h3>
-          <p>
-            Presencia internacional que conecta la marca con clientes fuera
-            de Colombia.
-          </p>
-        </article>
-
-        <article className="card" id="digital">
-          <span>03</span>
-          <h3>Brasaland Digital</h3>
-          <p>
-            Nuestra unidad tecnológica interna crea herramientas para mejorar
-            los procesos de los equipos de Brasaland.
-          </p>
-        </article>
+        {cards.map((card) => (
+          <InfoCard
+            key={card.number}
+            number={card.number}
+            title={card.title}
+            text={card.text}
+            id={card.id}
+          />
+        ))}
       </section>
 
       <footer>

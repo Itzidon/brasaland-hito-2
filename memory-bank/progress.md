@@ -2,7 +2,7 @@
 
 ## Estado actual
 
-La infraestructura de agentes y la estructura inicial de aplicaciones del hito están completadas.
+El hito de Ingeniería impulsada por IA está implementado y preparado para entrega mediante la Pull Request #4.
 
 ## Completado
 
@@ -12,32 +12,36 @@ La infraestructura de agentes y la estructura inicial de aplicaciones del hito e
   - `memory-bank/projectbrief.md`
   - `memory-bank/techContext.md`
   - `memory-bank/progress.md`
-- `AGENTS.md` creado con flujo obligatorio previo al commit.
+- `AGENTS.md` creado con:
+  - contexto obligatorio de lectura;
+  - flujo obligatorio previo al commit;
+  - archivos y carpetas protegidos;
+  - reglas para detenerse y solicitar confirmación.
 - Regla específica creada en `.agents/rules/`.
 - Skill reutilizable creada en `.agents/skills/`.
 - Aplicación interna ubicada en `uis/backoffice`.
 - Web pública creada en `uis/website`.
 - Website corporativo de Brasaland funcionando.
+- Componentes reutilizables implementados en el Website.
 - Backoffice de selección funcionando con candidaturas, búsqueda y filtros.
-- Estados y etapas se muestran con etiquetas legibles.
+- Estados y etapas mostrados mediante etiquetas legibles.
+- Archivo `uis/backoffice/.env.example` incluido para documentar la configuración de la API.
+- `.env.local` permanece fuera del repositorio.
 - `npm run build` completado correctamente en `uis/website`.
 - `npm run build` completado correctamente en `uis/backoffice`.
+- Pull Request #4 abierta hacia `main`.
+- La PR incluye capturas de Website y Backoffice.
+- La PR incluye enlace directo a `AGENTS.md`.
 
 ## Verificaciones realizadas
 
 - La web pública renderiza correctamente.
 - El backoffice carga las candidaturas desde la API.
-- Las etiquetas internas de la API no se muestran como valores crudos al usuario.
+- Los valores internos de estados y etapas no se muestran directamente al usuario.
 - Las dos aplicaciones compilan sin errores.
+- La estructura del monorepo respeta las rutas requeridas.
+- Los archivos locales de entorno no se incluyen en Git.
 
-## Próximos pasos
+## Pendiente
 
-1. Revisar los cambios con Git.
-2. Crear el commit final.
-3. Subir la rama a GitHub.
-4. Abrir una Pull Request hacia `main`.
-5. Añadir a la PR:
-   - captura de `uis/website`;
-   - captura de `uis/backoffice`;
-   - enlace directo a `AGENTS.md`.
-6. Entregar el enlace de la Pull Request en 4Geeks.
+- Entregar el enlace de la Pull Request #4 en el campus de 4Geeks.

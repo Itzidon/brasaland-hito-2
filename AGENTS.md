@@ -31,6 +31,20 @@ Application code must respect the existing monorepo structure:
 
 Do not create duplicate folders for functionality that already has an assigned location.
 
+## Protected files and folders
+
+The agent must not modify the following files or folders without explicit confirmation from the developer:
+
+- `CONTEXT.md`
+- `services/**`
+- `packages/shared/**`
+- `data/**`
+- Any `.env*` file containing environment configuration or credentials
+
+The agent must also request explicit confirmation before deleting, renaming or moving existing project files.
+
+These restrictions exist to prevent accidental changes to business context, backend contracts, shared packages, project data and environment configuration.
+
 ## Brasaland Talent Pipeline rules
 
 The current internal application supports Brasaland's recruitment process.
@@ -95,6 +109,7 @@ The agent must stop and request clarification when:
 - Required information is missing.
 - A destructive action could remove or overwrite existing work.
 - A decision would significantly change the project architecture.
+- A protected file or folder would need to be modified.
 
 The agent must not invent business rules or API fields.
 
