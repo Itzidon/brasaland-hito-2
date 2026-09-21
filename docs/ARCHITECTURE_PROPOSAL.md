@@ -122,7 +122,7 @@ services/
         │       └── service.py
         │
         └── dependencies.py
-        ```
+```
 
 Esta estructura separa claramente routers, schemas, modelos, lógica de negocio y configuración.
 
