@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Brasaland - Analizador de Incidencias</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #222;
+    }
+
+    header {
+      background: #1f2937;
+      color: white;
+      padding: 24px;
+    }
+
+    header h1 {
+      margin: 0 0 5px;
+    }
+
+    header p {
+      margin: 0;
+      color: #d1d5db;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 22px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .upload-area {
+      border: 2px dashed #9ca3af;
+      border-radius: 10px;
+      padding: 35px;
+      text-align: center;
+    }
+
+    input[type="file"] {
+      margin: 15px 0;
+    }
+
+    button {
+      border: none;
+      border-radius: 7px;
+      padding: 11px 18px;
+      font-size: 15px;
+      cursor: pointer;
+      background: #2563eb;
+      color: white;
+      margin: 5px;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    button:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .download-button {
+      background: #059669;
+    }
+
+    .download-button:hover {
+      background: #047857;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .metric {
+      background: #f9fafb;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .metric h3 {
+      margin: 0;
+      font-size: 34px;
+    }
+
+    .metric p {
+      margin: 8px 0 0;
+      color: #6b7280;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th,
+    td {
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 12px;
+    }
+
+    th {
+      background: #f9fafb;
+    }
+
+    .warning {
+      background: #fff7ed;
+      border-left: 5px solid #f97316;
+      padding: 15px;
+      margin-top: 15px;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+
+    #results {
+      display: none;
+    }
+
+    #message {
+      display: none;
+    }
+
+    @media (max-width: 700px) {
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>🔥 Brasaland Digital</h1>
+  <p>Analizador de Incidencias Operativas</p>
+</header>
+
+<main>
+
+  <section class="card">
+
+    <h2>Analizar archivo de incidencias</h2>
+
+    <p>
+      Selecciona el archivo CSV de incidencias para validar los registros
+      y generar el resumen operativo.
+    </p>
+
+    <div class="upload-area">
+
+      <strong>Selecciona un archivo CSV</strong>
+
+      <br />
+
+      <input
+        type="file"
+        id="csvFile"
+        accept=".csv"
+      />
+
+      <br />
+
+      <button id="analyzeButton" onclick="analyzeFile()">
+        Analizar incidencias
+      </button>
+
+    </div>
+
+    <div id="message"></div>
+
+  </section>
+
+
+  <section id="results">
+
+    <div class="card">
+
+      <h2>Resumen general</h2>
+
+      <div class="metrics">
+
+        <div class="metric">
+          <h3 id="totalRecords">0</h3>
+          <p>Total procesados</p>
+        </div>
+
+        <div class="metric">
+          <h3 id="validRecords">0</h3>
+          <p>Registros válidos</p>
+        </div>
+
+        <div class="metric">
+          <h3 id="invalidRecords">0</h3>
+          <p>Registros inválidos</p>
+        </div>
+
+      </div>
+
+      <div
+        id="invalidWarning"
+        class="warning"
+      ></div>
+
+    </div>
+
+
+    <div class="card">
+
+      <h2>Desglose por categoría</h2>
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Categoría</th>
+            <th>Cantidad</th>
+            <th>Porcentaje</th>
+          </tr>
+        </thead>
+
+        <tbody id="categoryTable"></tbody>
+
+      </table>
+
+    </div>
+
+
+    <div class="card">
+
+      <h2>Desglose por estado</h2>
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Estado</th>
+            <th>Cantidad</th>
+            <th>Porcentaje</th>
+          </tr>
+        </thead>
+
+        <tbody id="statusTable"></tbody>
+
+      </table>
+
+    </div>
+
+
+    <div class="card">
+
+      <h2>Índice de satisfacción</h2>
+
+      <p>
+        Casos puntuados:
+        <strong id="scoredCases"></strong>
+      </p>
+
+      <p>
+        Promedio:
+        <strong id="averageScore"></strong>
+      </p>
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Puntuación</th>
+            <th>Cantidad</th>
+          </tr>
+        </thead>
+
+        <tbody id="scoreTable"></tbody>
+
+      </table>
+
+    </div>
+
+
+    <div class="card">
+
+      <h2>Exportar resultados</h2>
+
+      <p>
+        Descarga el último análisis realizado en formato CSV.
+      </p>
+
+      <button
+        class="download-button"
+        onclick="downloadResults()"
+      >
+        Descargar results.csv
+      </button>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<script>
+
+async function analyzeFile() {
+
+  const fileInput = document.getElementById("csvFile");
+  const button = document.getElementById("analyzeButton");
+  const message = document.getElementById("message");
+
+  if (!fileInput.files.length) {
+
+    message.style.display = "block";
+    message.className = "error";
+    message.textContent = "Selecciona primero un archivo CSV.";
+
+    return;
+  }
+
+  const file = fileInput.files[0];
+
+  const formData = new FormData();
+
+  formData.append("file", file);
+
+  button.disabled = true;
+  button.textContent = "Analizando...";
+
+  message.style.display = "none";
+
+  try {
+
+    const response = await fetch(
+      "/api/incidents/analyze",
+      {
+        method: "POST",
+        body: formData
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.detail || "No se pudo analizar el archivo."
+      );
+    }
+
+    showResults(data);
+
+  } catch (error) {
+
+    message.style.display = "block";
+    message.className = "error";
+    message.textContent = error.message;
+
+  } finally {
+
+    button.disabled = false;
+    button.textContent = "Analizar incidencias";
+
+  }
+}
+
+
+function showResults(data) {
+
+  document.getElementById("results").style.display = "block";
+
+  document.getElementById("totalRecords").textContent =
+    data.total_records;
+
+  document.getElementById("validRecords").textContent =
+    data.valid_records;
+
+  document.getElementById("invalidRecords").textContent =
+    data.invalid_records;
+
+
+  const invalid = data.invalid_breakdown;
+
+  document.getElementById("invalidWarning").innerHTML = `
+    <strong>Registros inválidos detectados: ${data.invalid_records}</strong>
+    <br><br>
+    Missing location_id: ${invalid.missing_location}<br>
+    Invalid category: ${invalid.invalid_category}<br>
+    Empty description: ${invalid.empty_description}<br>
+    Missing reporter_id: ${invalid.missing_reporter}<br>
+    Invalid status: ${invalid.invalid_status}<br>
+    Closed without score: ${invalid.closed_without_score}<br>
+    Score out of range: ${invalid.score_out_of_range}
+  `;
+
+
+  const categoryTable =
+    document.getElementById("categoryTable");
+
+  categoryTable.innerHTML = "";
+
+  for (const [category, values] of Object.entries(data.categories)) {
+
+    categoryTable.innerHTML += `
+      <tr>
+        <td>${category}</td>
+        <td>${values.count}</td>
+        <td>${values.percentage}%</td>
+      </tr>
+    `;
+
+  }
+
+
+  const statusTable =
+    document.getElementById("statusTable");
+
+  statusTable.innerHTML = "";
+
+  for (const [status, values] of Object.entries(data.statuses)) {
+
+    statusTable.innerHTML += `
+      <tr>
+        <td>${status}</td>
+        <td>${values.count}</td>
+        <td>${values.percentage}%</td>
+      </tr>
+    `;
+
+  }
+
+
+  document.getElementById("scoredCases").textContent =
+    `${data.satisfaction.scored_cases} de ${data.satisfaction.closed_cases}`;
+
+  document.getElementById("averageScore").textContent =
+    `${data.satisfaction.average_score} / 5.00`;
+
+
+  const scoreTable =
+    document.getElementById("scoreTable");
+
+  scoreTable.innerHTML = "";
+
+  for (
+    const [score, count]
+    of Object.entries(data.satisfaction.scores)
+  ) {
+
+    scoreTable.innerHTML += `
+      <tr>
+        <td>${score}</td>
+        <td>${count}</td>
+      </tr>
+    `;
+
+  }
+
+}
+
+
+function downloadResults() {
+
+  window.location.href =
+    "/api/incidents/results/export";
+
+}
+
+</script>
+
+</body>
+</html>
