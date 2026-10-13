@@ -18,10 +18,16 @@ from shared.incidents_analysis import (
     results_to_rows,
 )
 
+from services.api.routes.suppliers import (
+    router as suppliers_router,
+)
+
 
 app = FastAPI(
     title="Brasaland Incidents API"
 )
+
+app.include_router(suppliers_router)
 
 last_results = None
 
@@ -31,6 +37,7 @@ def root():
     return {
         "message": "Brasaland Incidents API",
         "backoffice": "/backoffice",
+        "suppliers": "/api/suppliers",
         "docs": "/docs",
     }
 
